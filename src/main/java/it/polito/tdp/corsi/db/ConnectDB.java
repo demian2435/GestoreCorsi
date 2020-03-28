@@ -6,29 +6,30 @@ import java.sql.SQLException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-public class ConnectDB {
+class ConnectDB {
+
 	private static final String jdbcURL = "jdbc:mysql://localhost/iscritticorsi";
 	private static HikariDataSource ds;
-	
+
 	public static Connection getConnection() {
-		if(ds == null) {
+		if (ds == null) {
+			// UTILIZZIAMO HIKARI PER CREARE E CONFIGURARE LA CONNESSIONE
 			HikariConfig config = new HikariConfig();
 			config.setJdbcUrl(jdbcURL);
 			config.setUsername("root");
-			config.setPassword("rootroot");
-			
+			config.setPassword("root");
+
+			// IMPOSTAZIONI GESTIONE CONNESSIONE
 			config.addDataSourceProperty("cachePrepStmts", true);
-			config.addDataSourceProperty("prepStmtChacheSize", 250);
+			config.addDataSourceProperty("prepStmtCacheSize", 250);
 			config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-			
+
 			ds = new HikariDataSource(config);
 		}
-		
 		try {
 			return ds.getConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.err.println("Errore di connessione ad db");
+			System.out.println("Errore di connesione al database");
 			throw new RuntimeException(e);
 		}
 	}
