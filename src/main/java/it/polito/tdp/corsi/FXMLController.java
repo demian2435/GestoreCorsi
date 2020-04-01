@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 import it.polito.tdp.corsi.model.Corso;
 import it.polito.tdp.corsi.model.Model;
 import it.polito.tdp.corsi.model.Studente;
-import javafx.beans.binding.IntegerExpression;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -101,16 +100,36 @@ public class FXMLController {
 
 	@FXML
 	void stampaDivisione(ActionEvent event) {
+		txtRisultato.clear();
+		String corso = txtCorso.getText();
 
+		if (!model.esisteCorso(corso)) {
+			txtRisultato.setText("Il corso non esiste");
+			return;
+		}
+
+		Map<String, Integer> statistiche = model.getDivisione(corso);
+
+		for (String cds : statistiche.keySet()) {
+			txtRisultato.appendText(cds + " = " + statistiche.get(cds) + "\n");
+		}
 	}
 
 	@FXML
 	void stampaStudenti(ActionEvent event) {
 		txtRisultato.clear();
-		List<Studente> result = model.getStudenteByCorso(txtCorso.getText());
-		
-		if(result.size() == 0) {
-			txtRisultato.appendText("Nessuno studente iscritto al corso");
+		String corso = txtCorso.getText();
+
+		if (!model.esisteCorso(corso)) {
+			txtRisultato.setText("Il corso non esiste");
+			return;
+		}
+
+		List<Studente> result = model.getStudenteByCorso(corso);
+
+		if (result.size() == 0) {
+			txtRisultato.setText("Nessuno studente iscritto al corso");
+			return;
 		}
 
 		for (Studente s : result) {
